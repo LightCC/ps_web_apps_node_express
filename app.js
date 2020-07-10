@@ -9,6 +9,7 @@ var app = express();
 // morgan('combined') for a lot of http info to the console
 // morgan('tiny') for limited info
 app.use(morgan('tiny'));
+app.use(express.static(path.join(__dirname, '/public/')))
 app.get('/', function(req, res){
   res.sendFile(path.join(__dirname, '/views/index.html'));
 })
