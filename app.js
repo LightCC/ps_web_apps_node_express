@@ -11,7 +11,6 @@ const app = express();
 // i.e. nodemon must be installed and configured, and run our app with nodemon instead of node
 // default is 3000 if the config isn't setup
 const port = process.env.PORT || 3000;
-const bookRouter = require('./src/routes/bookRoutes');
 
 // app.xx are Express functions for managing the web site
 
@@ -24,6 +23,12 @@ app.use('/js', express.static(path.join(__dirname, '/node_modules/bootstrap/dist
 app.use('/js', express.static(path.join(__dirname, '/node_modules/jquery/dist')));
 app.set('views', './src/views');
 app.set('view engine', 'ejs');
+
+const nav = [
+  { link: '/books', title: 'Books' },
+  { link: '/authors', title: 'Authors' }
+];
+const bookRouter = require('./src/routes/bookRoutes')(nav);
 
 // bookRouter likely needs to be assigned after setting up the routes, so it's down here
 app.use('/books', bookRouter);
