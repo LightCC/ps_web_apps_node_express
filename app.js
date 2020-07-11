@@ -20,7 +20,7 @@ app.set('views', './src/views');
 app.set('view engine', 'ejs');
 
 app.get('/', (req, res) => {
-  res.render('index', { list: ['a1', 'b2'], title: 'Library (as variable)' });
+  res.render('index', { list: ['a1', 'b2'], title: 'Library', pagename: 'MyLibrary' });
 });
 
 app.listen(port, () => {
