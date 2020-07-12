@@ -27,6 +27,11 @@ const port = process.env.PORT || 3000;
 // morgan('combined') for a lot of http info to the console
 // morgan('tiny') for limited info
 app.use(morgan('tiny'));
+
+app.use((req, res, next) => {
+  debug('my middleware');
+  next();
+});
 app.use(express.static(path.join(__dirname, '/public/')));
 app.use('/css', express.static(path.join(__dirname, '/node_modules/bootstrap/dist/css')));
 app.use('/js', express.static(path.join(__dirname, '/node_modules/bootstrap/dist/js')));

@@ -9,21 +9,21 @@ const db = new sqlite3.Database('library.db3');
 // setup the actual routes for bookRouter
 // Note that below the bookRouter is bound to `/books`,
 // so the below routes are appended to that (i.e. `/` is the same as `/books`)
-
 function router(nav) {
-  bookRouter.route('/').get((req, res) => {
-    db.all('select * from books', (err, records) => {
-      res.render(
-        'bookListView',
-        {
-          nav,
-          title: 'Book List',
-          pagename: 'MyLibrary - Books',
-          books: records
-        }
-      );
+  bookRouter.route('/')
+    .get((req, res) => {
+      db.all('select * from books', (err, records) => {
+        res.render(
+          'bookListView',
+          {
+            nav,
+            title: 'Book List',
+            pagename: 'MyLibrary - Books',
+            books: records
+          }
+        );
+      });
     });
-  });
   bookRouter.route('/:id').get((req, res) => {
     const { id } = req.params;
     db.all(`select * from books where id = ${id}`, (err, record) => {
