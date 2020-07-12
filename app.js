@@ -5,16 +5,6 @@ const chalk = require('chalk');
 const debug = require('debug')('app');
 const morgan = require('morgan');
 const path = require('path');
-// const sqlite3 = require('sqlite3').verbose();
-
-// const db = new sqlite3.Database('library.db3');
-
-// db.serialize(() => {
-//   db.each('SELECT rowid AS id, title, author FROM books', (err, row) => {
-//     const rowidstr = chalk.yellowBright(`${row.id}:`);
-//     console.log(`${rowidstr} ${chalk.green('Title:')} ${row.title}, ${chalk.green('Author:')} ${row.author}`);
-//   });
-// });
 
 const app = express();
 // pull in PORT from nodemon config `nodemonConfig` in node's `package.json` file
@@ -43,10 +33,13 @@ const nav = [
   { link: '/books', title: 'Books' },
   { link: '/authors', title: 'Authors' }
 ];
-const bookRouter = require('./src/routes/bookRoutes')(nav);
 
-// bookRouter likely needs to be assigned after setting up the routes, so it's down here
+const bookRouter = require('./src/routes/bookRoutes')(nav);
+const adminRouter = require('./src/routes/adminRoutes')(nav);
+
 app.use('/books', bookRouter);
+app.use('/admin', adminRouter);
+
 app.get('/', (req, res) => {
   res.render(
     'index',
