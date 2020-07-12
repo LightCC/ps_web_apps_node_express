@@ -17,6 +17,11 @@ const port = process.env.PORT || 3000;
 // morgan('combined') for a lot of http info to the console
 // morgan('tiny') for limited info
 app.use(morgan('tiny'));
+
+app.use((req, res, next) => {
+  debug('my middleware');
+  next();
+});
 app.use(express.static(path.join(__dirname, '/public/')));
 app.use('/css', express.static(path.join(__dirname, '/node_modules/bootstrap/dist/css')));
 app.use('/js', express.static(path.join(__dirname, '/node_modules/bootstrap/dist/js')));
@@ -28,10 +33,13 @@ const nav = [
   { link: '/books', title: 'Books' },
   { link: '/authors', title: 'Authors' }
 ];
-const bookRouter = require('./src/routes/bookRoutes')(nav);
 
-// bookRouter likely needs to be assigned after setting up the routes, so it's down here
+const bookRouter = require('./src/routes/bookRoutes')(nav);
+const adminRouter = require('./src/routes/adminRoutes')(nav);
+
 app.use('/books', bookRouter);
+app.use('/admin', adminRouter);
+
 app.get('/', (req, res) => {
   res.render(
     'index',
