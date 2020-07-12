@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "set DEBUG=app & nodemon app.js",
+    "start": "set DEBUG=app:* & nodemon app.js",
     "lint": "eslint app.js"
   },
   "author": "",
@@ -20,7 +20,8 @@
     "morgan": "1.10.0",
     "nodemon": "2.0.4",
     "popper": "1.0.1",
-    "pug": "3.0.0"
+    "pug": "3.0.0",
+    "sqlite3": "5.0.0"
   },
   "devDependencies": {
     "eslint": "7.4.0",
