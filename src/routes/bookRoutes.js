@@ -1,34 +1,41 @@
 const express = require('express');
-// Setup a router that we will use for all the `/books` routes for pages with book lists/info
-const bookRouter = express.Router();
-const sqlite3 = require('sqlite3').verbose();
+const { MongoClient } = require('mongodb');
 const debug = require('debug')('app:bookRoutes');
 
-const db = new sqlite3.Database('library.db3');
+const bookRouter = express.Router();
 
-// setup the actual routes for bookRouter
-// Note that below the bookRouter is bound to `/books`,
-// so the below routes are appended to that (i.e. `/` is the same as `/books`)
 function router(nav) {
   bookRouter.route('/')
-    .all((req, res, next) => {
-      db.all('select * from books', (err, records) => {
-        req.books = records;
-        debug('retreive books');
-        next();
-      });
-    })
     .get((req, res) => {
-      debug(req.books);
-      res.render(
-        'bookListView',
-        {
-          nav,
-          title: 'Book List',
-          pagename: 'MyLibrary - Books',
-          books: req.books
+      const url = 'mongodb://localhost:27017';
+      const dbName = 'libraryApp';
+
+      (async function mongo() {
+        let client;
+        try {
+          client = await MongoClient.connect(url);
+          debug('Connected correctly to server');
+
+          const db = client.db(dbName);
+
+          const col = await db.collection('books');
+
+          const books = await col.find().toArray();
+          res.render(
+            'bookListView',
+            {
+              nav,
+              title: 'Book List',
+              pagename: 'MyLibrary - Books',
+              books
+            }
+          );
+        } catch (err) {
+          debug(err.stack);
         }
-      );
+
+        client.close();
+      }());
     });
   bookRouter.route('/:id')
     .all((req, res, next) => {
