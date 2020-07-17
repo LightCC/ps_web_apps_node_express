@@ -5,6 +5,8 @@ const chalk = require('chalk');
 const debug = require('debug')('app');
 const morgan = require('morgan');
 const path = require('path');
+const bodyParser = require('body-parser');
+const { urlencoded } = require('body-parser');
 
 const app = express();
 // pull in PORT from nodemon config `nodemonConfig` in node's `package.json` file
@@ -17,7 +19,8 @@ const port = process.env.PORT || 3000;
 // morgan('combined') for a lot of http info to the console
 // morgan('tiny') for limited info
 app.use(morgan('tiny'));
-
+app.use(bodyParser.json());
+app.use(urlencoded({ extended: false }));
 app.use((req, res, next) => {
   debug('my middleware');
   next();
@@ -36,9 +39,11 @@ const nav = [
 
 const bookRouter = require('./src/routes/bookRoutes')(nav);
 const adminRouter = require('./src/routes/adminRoutes')(nav);
+const authRouter = require('./src/routes/authRoutes')(nav);
 
 app.use('/books', bookRouter);
 app.use('/admin', adminRouter);
+app.use('/auth', authRouter);
 
 app.get('/', (req, res) => {
   res.render(
