@@ -1,10 +1,11 @@
 const express = require('express');
+const passport = require('passport');
 const { MongoClient } = require('mongodb');
 const debug = require('debug')('app:authRoutes');
 
 const authRouter = express.Router();
 
-function router() {
+function router(nav) {
   authRouter.route('/signUp')
     .post((req, res) => {
       const { username, password } = req.body;
@@ -37,9 +38,21 @@ function router() {
         res.redirect('/auth/profile');
       });
     });
+  authRouter.route('/signIn')
+    .get((req, res) => {
+      res.render('signIn', {
+        nav,
+        title: 'Sign In',
+        pagename: 'MyLibrary - Sign In'
+      });
+    })
+    .post(passport.authenticate('local', {
+      successRedirect: '/auth/profile',
+      failureRedirect: '/'
+    }));
   authRouter.route('/profile')
     .get((req, res) => {
-      res.json(req.user);
+      res.json(['Signed In As:', req.user]);
     });
   return authRouter;
 }
