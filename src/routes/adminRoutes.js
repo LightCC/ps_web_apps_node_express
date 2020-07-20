@@ -35,6 +35,8 @@ const books = [
     read: false
   }
 ];
+
+// eslint-disable-next-line no-unused-vars
 function router(nav) {
   adminRouter.route('/')
     .get((req, res) => {

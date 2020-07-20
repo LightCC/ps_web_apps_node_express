@@ -6,6 +6,10 @@ const debug = require('debug')('app');
 const morgan = require('morgan');
 const path = require('path');
 const bodyParser = require('body-parser');
+// const passport = require('passport');
+const cookieParser = require('cookie-parser');
+const session = require('express-session');
+
 const { urlencoded } = require('body-parser');
 
 const app = express();
@@ -21,10 +25,15 @@ const port = process.env.PORT || 3000;
 app.use(morgan('tiny'));
 app.use(bodyParser.json());
 app.use(urlencoded({ extended: false }));
-app.use((req, res, next) => {
-  debug('my middleware');
-  next();
-});
+app.use(cookieParser());
+app.use(session({ secret: 'library' }));
+
+require('./src/config/passport.js')(app);
+
+// app.use((req, res, next) => {
+//   debug('my middleware');
+//   next();
+// });
 app.use(express.static(path.join(__dirname, '/public/')));
 app.use('/css', express.static(path.join(__dirname, '/node_modules/bootstrap/dist/css')));
 app.use('/js', express.static(path.join(__dirname, '/node_modules/bootstrap/dist/js')));
